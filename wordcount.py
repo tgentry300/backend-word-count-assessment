@@ -39,7 +39,14 @@ print_words() and print_top().
 
 """
 
-import sys
+import sys, string, operator
+from beautifultable import BeautifulTable
+
+#helper function to read file with read-only rights, and returns file-lines
+def read_file(file):
+    file_lines = open(str(file), 'r').read().lower()
+    file_list_no_punctuation =  file_lines.translate(None, string.punctuation).split()
+    return file_list_no_punctuation
 
 # +++your code here+++
 # Define print_words(filename) and print_top(filename) functions.
@@ -48,6 +55,31 @@ import sys
 # Then print_words() and print_top() can just call the utility function.
 
 ###
+
+#Print words function
+def print_words(filename):
+    table = BeautifulTable()
+    table.column_headers = ["Word", "Count"]
+    file = read_file(filename)
+    for word in set(file):
+        table.append_row([word, file.count(word)])
+    print table
+
+
+#Print top function
+def print_top(filename):
+    table = BeautifulTable()
+    table.column_headers = ["Word", "Count"]
+    dict_of_words = {}
+    file = read_file(filename)
+    for word in set(file):
+        dict_of_words[word] = file.count(word)
+    sorted_list = sorted(dict_of_words.items(), key=operator.itemgetter(1))
+    list_of_tuples = sorted_list[:-21:-1]
+    for item in range(len(list_of_tuples)):
+        table.append_row([list_of_tuples[item][0], list_of_tuples[item][1]])
+    print table
+
 
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
