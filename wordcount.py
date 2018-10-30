@@ -44,8 +44,9 @@ from beautifultable import BeautifulTable
 
 #helper function to read file with read-only rights, and returns file-lines
 def read_file(file):
-    file_lines = open(str(file), 'r').read().lower()
-    file_list_no_punctuation =  file_lines.translate(None, string.punctuation).split()
+    with open(file, 'r') as file:
+        file_lines = file.read().lower()
+        file_list_no_punctuation =  file_lines.translate(None, string.punctuation).split()
     return file_list_no_punctuation
 
 # +++your code here+++
@@ -61,7 +62,7 @@ def print_words(filename):
     table = BeautifulTable()
     table.column_headers = ["Word", "Count"]
     file = read_file(filename)
-    for word in set(file):
+    for word in sorted(set(file)):
         table.append_row([word, file.count(word)])
     print table
 
